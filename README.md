@@ -29,4 +29,6 @@ since `gl_FragColor` is a four-dimensional vector, we can compare at-least 4 thi
 
 this is a p5.js sketch template that sets up the ping-pong buffering. 
 
+---
+
 acknowledgements: elias (elie) zananiri for his [shader time class](https://shadertime.betamovement.net/lecture/post-processing/). 
