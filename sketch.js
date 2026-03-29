@@ -14,8 +14,9 @@ let buffer_1, buffer_2;
 //switch to ping-pong.
 let tog = false;
 
-//for this example, to show passing of mouse-coords:
-let m_coords = [-1000, -1000]; //off-screen to avoid 0,0 draw by default.
+//to pass to compute-shader:
+let mouse_was_clicked = 0.0;
+let m_coords = [0.0, 0.0];
 
 function preload() {
   main_shader = loadShader("./vert.vert", "./frag.frag");
@@ -65,17 +66,21 @@ function draw() {
   main_shader.setUniform("u_res", [width, height]);
   rect(0, 0, width, height);
 
-  //reverse the switch. 
+  //reverse the switch.
   tog = !tog;
+
+  mouse_was_clicked = 0.0;
 }
 
 function mousePressed() {
-  m_coords = [mouseX, mouseY];
+  mouse_was_clicked = 1.0;
+  m_coords = [mouseX * 1.0, mouseY * 1.0]; //pass as float.
 }
 
 /* helpers */
 function set_uniforms(shader_name, prev_buffer) {
   shader_name.setUniform("u_prev", prev_buffer);
   shader_name.setUniform("u_mouse", m_coords);
+  shader_name.setUniform("u_mouse_was_clicked", mouse_was_clicked);
   shader_name.setUniform("u_res", [width, height]);
 }

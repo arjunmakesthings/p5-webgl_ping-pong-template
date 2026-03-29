@@ -8,28 +8,34 @@ varying vec2 vTexCoord;
 //custom uniforms:
 uniform vec2 u_res;
 uniform sampler2D u_prev;
-uniform vec2 u_mouse;
+uniform vec2 u_mouse; //passed in pixel space.
+uniform float u_mouse_was_clicked; 
+
+//parameters:
+float seed = 100.0;
+float capacity = 5.0;
+float rate = 0.1;
+
+//what we're passing: 
+float thing = 0.0;
 
 void main() {
-    //take texture from previous buffer to compute:
-    vec4 prev = texture2D(u_prev, vTexCoord);
+    //globals:
+    vec2 px_coord = vTexCoord * u_res;
 
-    //convert uv to pixel_coords:
-    vec2 fragCoord = vTexCoord * u_res;
+    float curr_self = texture2D(u_prev, vTexCoord).r;
 
-    float d = distance(fragCoord, u_mouse);
+    if(u_mouse_was_clicked == 1.0) {
+        //was clicked.
+        float d = distance(px_coord, u_mouse);
 
-    //match color from before.
-    vec4 color = prev;
-
-    //where mouse was pressed:
-    if(d < 20.0) {
-        color = vec4(1.0);
+        if(d < 20.0) {
+            thing = seed;
+        }
+    } else {
+        thing = curr_self;
     }
-    // else{
-    //     color = vec4(0.0,0.0,0.0,1.0); 
-    // }
 
     //pass color:
-    gl_FragColor = color;
+    gl_FragColor = vec4(thing, 0.0, 0.0, 0.0);
 }
